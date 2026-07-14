@@ -1,0 +1,126 @@
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #0f172a; /* Azul escuro premium */
+    color: #f8fafc; /* Texto claro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: #1e293b; /* Fundo do card */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #334155;
+}
+
+h1 {
+    font-size: 24px;
+    color: #38bdf8; /* Azul cyan vibrante */
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.descricao {
+    font-size: 14px;
+    color: #94a3b8;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+input {
+    background-color: #0f172a;
+    border: 1px solid #475569;
+    color: #f8fafc;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
+}
+
+input:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+button {
+    background-color: #38bdf8;
+    color: #0f172a;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0ea5e9;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.resultado-container {
+    background-color: #0f172a;
+    padding: 16px;
+    border-radius: 6px;
+    border-left: 4px solid #475569;
+}
+
+.resultado-container h2 {
+    font-size: 16px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+#resultado {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f8fafc;
+}
+
+/* Cores de feedback dinâmico via JS */
+.aprovado {
+    color: #4ade80 !important; /* Verde */
+}
+
+.reprovado {
+    color: #f87171 !important; /* Vermelho */
+}

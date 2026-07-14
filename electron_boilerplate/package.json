@@ -1,0 +1,19 @@
+{
+  "name": "electron-boilerplate-senac",
+  "version": "1.0.0",
+  "description": "Boilerplate simples de Electron para uso em sala de aula.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "electron",
+    "senac",
+    "boilerplate"
+  ],
+  "author": "Docência SENAC",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

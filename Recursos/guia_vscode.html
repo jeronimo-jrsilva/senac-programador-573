@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Extensões VS Code — Programador de Sistemas</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #263147;
+            --border: #334155;
+            --accent: #38bdf8;
+            --accent2: #818cf8;
+            --success: #22c55e;
+            --warning: #fbbf24;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding: 0 0 100px;
+            line-height: 1.7;
+        }
+
+        /* ====== HEADER ====== */
+        header {
+            background: linear-gradient(135deg, #0c4a6e 0%, #1e1b4b 100%);
+            border-bottom: 2px solid var(--accent);
+            padding: 40px 24px;
+            text-align: center;
+        }
+        header .badge {
+            display: inline-block;
+            background: rgba(56,189,248,.15);
+            border: 1px solid var(--accent);
+            border-radius: 999px;
+            padding: 4px 16px;
+            font-size: .75rem;
+            color: var(--accent);
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        header h1 {
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            color: var(--accent);
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+        header p { color: var(--muted); font-size: .9rem; max-width: 600px; margin: 0 auto; }
+
+        /* ====== PROGRESS BAR ====== */
+        #progress-wrap {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        #progress-bar-bg {
+            flex: 1; height: 8px;
+            background: var(--border);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 999px;
+            transition: width .4s ease;
+        }
+        #progress-label { font-size: .78rem; color: var(--muted); white-space: nowrap; }
+
+        /* ====== MAIN ====== */
+        main { max-width: 860px; margin: 0 auto; padding: 32px 20px; }
+
+        /* ====== NAME FIELD ====== */
+        .name-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .name-section label {
+            display: block;
+            font-size: .8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 8px;
+        }
+        .name-section input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .name-section input:focus { border-color: var(--accent); }
+
+        /* ====== SECTION HEADER ====== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 48px 0 24px;
+        }
+        .section-header .icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; flex-shrink: 0;
+        }
+        .section-header .info h2 {
+            font-size: 1.15rem; font-weight: 700;
+            color: var(--accent);
+        }
+        .section-header .info p { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+
+        /* ====== CARDS ====== */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .card h3 {
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--accent2);
+            margin-bottom: 12px;
+        }
+        .card ol, .card ul {
+            padding-left: 20px;
+            color: #cbd5e1;
+        }
+        .card li { margin-bottom: 6px; font-size: .9rem; }
+        .card code {
+            background: var(--bg);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: .85rem;
+            border: 1px solid var(--border);
+        }
+
+        /* ====== CODE BLOCKS ====== */
+        .code-block {
+            position: relative;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+        .code-block pre {
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: .82rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        .code-block .copy-btn {
+            position: absolute;
+            top: 8px; right: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: .72rem;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .code-block .copy-btn:hover { background: var(--accent); color: var(--bg); }
+        .code-block .copy-btn.copied { background: var(--success); color: white; }
+
+        /* ====== REFLECTION TEXTAREA ====== */
+        .reflection { margin-top: 16px; }
+        .reflection label {
+            display: block;
+            font-size: .8rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .reflection textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: .9rem;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .reflection textarea:focus { border-color: var(--accent); }
+        .reflection textarea::placeholder { color: var(--muted); opacity: .6; }
+
+        /* ====== COMPLETE BUTTON ====== */
+        .complete-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .complete-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .complete-btn.done {
+            border-color: var(--success);
+            background: rgba(34,197,94,.15);
+            color: var(--success);
+        }
+
+        /* ====== PREPARATION SECTION ====== */
+        .prep-step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+        .prep-step h4 {
+            font-size: .85rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .prep-step p { font-size: .85rem; color: #cbd5e1; }
+
+        /* ====== FLOATING EXPORT ====== */
+        #export-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        #export-bar .status { font-size: .8rem; color: var(--muted); }
+        #export-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: .9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity .2s;
+        }
+        #export-btn:hover { opacity: .85; }
+    </style>
+</head>
+<body>
+
+<!-- ====== HEADER ====== -->
+<header>
+    <div class="badge">Programador de Sistemas — SENAC Centro</div>
+    <h1>Guia de Extensões do VS Code</h1>
+    <p>Instale, teste e descubra como cada extensão pode ajudar no seu dia a dia de desenvolvimento.</p>
+</header>
+
+<!-- ====== PROGRESS ====== -->
+<div id="progress-wrap">
+    <span id="progress-label">0 / 5 concluídas</span>
+    <div id="progress-bar-bg"><div id="progress-bar"></div></div>
+</div>
+
+<main>
+
+    <!-- ====== NAME ====== -->
+    <div class="name-section">
+        <label for="student-name">Seu nome</label>
+        <input type="text" id="student-name" placeholder="Digite seu nome completo...">
+    </div>
+
+    <!-- ====== SEÇÃO 0: PREPARAÇÃO ====== -->
+    <div class="section-header">
+        <div class="icon" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);">📁</div>
+        <div class="info">
+            <h2>0. Preparação</h2>
+            <p>Crie os 3 arquivos base. Todas as extensões usam esses mesmos arquivos para teste.</p>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <h4>Passo 1: Crie uma pasta</h4>
+        <p>Crie uma pasta chamada <code>teste-extensoes</code> no seu desktop. Abra ela no VS Code (Arquivo → Abrir Pasta).</p>
+    </div>
+
+    <div class="prep-step">
+        <h4>Passo 2: Crie o arquivo <code>index.html</code></h4>
+        <p>Clique com o botão direito na pasta → Novo Arquivo → <code>index.html</code>. Cole o código abaixo:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Meu Site&lt;/title&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Olá, Mundo!&lt;/h1&gt;
+    &lt;p id="intro"&gt;Este é meu primeiro site.&lt;/p&gt;
+
+    &lt;div class="cartao"&gt;
+        &lt;h2&gt;Card de Teste&lt;/h2&gt;
+        &lt;p&gt;Conteúdo do card.&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;script src="app.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <h4>Passo 3: Crie o arquivo <code>style.css</code></h4>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <pre><code>body {
+    font-family: sans-serif;
+    background: #f8fafc;
+    padding: 20px;
+}
+
+.cartao {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 16px;
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <h4>Passo 4: Crie o arquivo <code>app.js</code></h4>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <pre><code>const nome = "Aluno";
+const nota = 8;
+
+if (nota >= 7) {
+    console.log(nome + " aprovado");
+} else {
+    console.log(nome + " reprovado");
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- ====== SEÇÃO 1: LIVE SERVER ====== -->
+    <div class="section-header">
+        <div class="icon" style="background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);">🌐</div>
+        <div class="info">
+            <h2>1. Live Server</h2>
+            <p>Ritwick Dey — Abre seu HTML no navegador com atualização ao vivo.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📦 Instalar</h3>
+        <ol>
+            <li>Pressione <code>Ctrl+Shift+X</code> (abre o painel de extensões)</li>
+            <li>Busque por <strong>Live Server</strong></li>
+            <li>Clique em <strong>Instalar</strong> (o autor é <strong>Ritwick Dey</strong>)</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>🧪 Testar</h3>
+        <ol>
+            <li>Clique com o botão direito no <code>index.html</code></li>
+            <li>Selecione <strong>"Open with Live Server"</strong></li>
+            <li>O navegador abre automaticamente — veja seu site!</li>
+            <li>Mude o texto do <code>&lt;h1&gt;</code> no VS Code → pressione <code>Ctrl+S</code></li>
+            <li>Observe: o navegador atualizou sozinho, sem F5!</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>💭 Reflexão</h3>
+        <div class="reflection">
+            <label>O que você entendeu? Como isso pode te ajudar?</label>
+            <textarea data-ext="live_server" placeholder="Escreva aqui suas impressões..."></textarea>
+        </div>
+        <button class="complete-btn" data-ext="live_server" onclick="toggleComplete(this)">✅ Marcar como concluído</button>
+    </div>
+
+    <!-- ====== SEÇÃO 2: AUTO RENAME TAG ====== -->
+    <div class="section-header">
+        <div class="icon" style="background:rgba(129,140,248,.15);border:1px solid rgba(129,140,248,.3);">🏷️</div>
+        <div class="info">
+            <h2>2. Auto Rename Tag</h2>
+            <p>Jun Han — Renomeia tags HTML de abertura e fechamento juntas.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📦 Instalar</h3>
+        <ol>
+            <li><code>Ctrl+Shift+X</code> → busque <strong>Auto Rename Tag</strong></li>
+            <li>Clique em <strong>Instalar</strong> (autor: <strong>Jun Han</strong>)</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>🧪 Testar</h3>
+        <ol>
+            <li>No <code>index.html</code>, coloque o cursor em <code>&lt;h1&gt;</code></li>
+            <li>Mude <code>h1</code> para <code>h2</code></li>
+            <li>Observe: o <code>&lt;/h1&gt;</code> mudou automaticamente para <code>&lt;/h2&gt;</code>!</li>
+            <li>Experimente com <code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>, <code>&lt;span&gt;</code></li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>💭 Reflexão</h3>
+        <div class="reflection">
+            <label>O que você entendeu? Como isso pode te ajudar?</label>
+            <textarea data-ext="auto_rename" placeholder="Escreva aqui suas impressões..."></textarea>
+        </div>
+        <button class="complete-btn" data-ext="auto_rename" onclick="toggleComplete(this)">✅ Marcar como concluído</button>
+    </div>
+
+    <!-- ====== SEÇÃO 3: PRETTIER ====== -->
+    <div class="section-header">
+        <div class="icon" style="background:rgba(244,114,182,.15);border:1px solid rgba(244,114,182,.3);">✨</div>
+        <div class="info">
+            <h2>3. Prettier</h2>
+            <p>Prettier — Formata seu código automaticamente ao salvar.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📦 Instalar</h3>
+        <ol>
+            <li><code>Ctrl+Shift+X</code> → busque <strong>Prettier</strong></li>
+            <li>Clique em <strong>Instalar</strong> (autor: <strong>Prettier</strong>)</li>
+            <li>Depois, ative "Format on Save": <code>Ctrl+,</code> → busque <strong>"format on save"</strong> → marque a opção</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>🧪 Testar</h3>
+        <ol>
+            <li>Abra o <code>style.css</code></li>
+            <li>Embaralhe a indentação manualmente (coloque tudo na mesma linha, por exemplo)</li>
+            <li>Pressione <code>Ctrl+S</code></li>
+            <li>Observe: o código se alinhou sozinho!</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>💭 Reflexão</h3>
+        <div class="reflection">
+            <label>O que você entendeu? Como isso pode te ajudar?</label>
+            <textarea data-ext="prettier" placeholder="Escreva aqui suas impressões..."></textarea>
+        </div>
+        <button class="complete-btn" data-ext="prettier" onclick="toggleComplete(this)">✅ Marcar como concluído</button>
+    </div>
+
+    <!-- ====== SEÇÃO 4: ERROR LENS ====== -->
+    <div class="section-header">
+        <div class="icon" style="background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.3);">🔍</div>
+        <div class="info">
+            <h2>4. Error Lens</h2>
+            <p>Alexander — Mostra erros e warnings direto na linha do código.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📦 Instalar</h3>
+        <ol>
+            <li><code>Ctrl+Shift+X</code> → busque <strong>Error Lens</strong></li>
+            <li>Clique em <strong>Instalar</strong> (autor: <strong>Alexander</strong>)</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>🧪 Testar</h3>
+        <ol>
+            <li>Abra o <code>app.js</code></li>
+            <li>Mude a linha <code>const nome = "Aluno";</code> para <code>const nome = ;</code> (apague o valor)</li>
+            <li>Observe: aparece uma mensagem vermelha <strong>na mesma linha</strong> do erro</li>
+            <li>Agora experimente: <code>const x = 10</code> (sem ponto e vírgula) — veja o warning amarelo</li>
+            <li>Desfaça as mudanças com <code>Ctrl+Z</code></li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>💭 Reflexão</h3>
+        <div class="reflection">
+            <label>O que você entendeu? Como isso pode te ajudar?</label>
+            <textarea data-ext="error_lens" placeholder="Escreva aqui suas impressões..."></textarea>
+        </div>
+        <button class="complete-btn" data-ext="error_lens" onclick="toggleComplete(this)">✅ Marcar como concluído</button>
+    </div>
+
+    <!-- ====== SEÇÃO 5: HTML CSS SUPPORT ====== -->
+    <div class="section-header">
+        <div class="icon" style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);">🎨</div>
+        <div class="info">
+            <h2>5. HTML CSS Support</h2>
+            <p>ECEC — Autocompleta classes CSS dentro do HTML.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📦 Instalar</h3>
+        <ol>
+            <li><code>Ctrl+Shift+X</code> → busque <strong>HTML CSS Support</strong></li>
+            <li>Clique em <strong>Instalar</strong> (autor: <strong>ECEC</strong>)</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>🧪 Testar</h3>
+        <ol>
+            <li>No <code>index.html</code>, dentro do <code>&lt;div class=""&gt;</code>, coloque o cursor entre as aspas</li>
+            <li>Pressione <code>Ctrl+Espaço</code></li>
+            <li>Observe: as classes definidas no <code>style.css</code> (<code>cartao</code>) aparecem na lista!</li>
+            <li>Selecione <code>cartao</code> — a classe foi inserida sem erro de digitação</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h3>💭 Reflexão</h3>
+        <div class="reflection">
+            <label>O que você entendeu? Como isso pode te ajudar?</label>
+            <textarea data-ext="html_css_support" placeholder="Escreva aqui suas impressões..."></textarea>
+        </div>
+        <button class="complete-btn" data-ext="html_css_support" onclick="toggleComplete(this)">✅ Marcar como concluído</button>
+    </div>
+
+    <!-- ====== RESUMO ====== -->
+    <div class="section-header">
+        <div class="icon" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);">🏆</div>
+        <div class="info">
+            <h2>Resumo</h2>
+            <p>5 extensões que transformam o VS Code em uma ferramenta profissional.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <table style="width:100%;border-collapse:collapse;font-size:.85rem;">
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px;color:var(--accent);font-weight:700;">Live Server</td>
+                <td style="padding:10px;color:#cbd5e1;">Preview ao vivo no navegador</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px;color:var(--accent);font-weight:700;">Auto Rename Tag</td>
+                <td style="padding:10px;color:#cbd5e1;">Renomeia tags HTML em par</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px;color:var(--accent);font-weight:700;">Prettier</td>
+                <td style="padding:10px;color:#cbd5e1;">Formata código ao salvar</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px;color:var(--accent);font-weight:700;">Error Lens</td>
+                <td style="padding:10px;color:#cbd5e1;">Mostra erros inline na linha</td>
+            </tr>
+            <tr>
+                <td style="padding:10px;color:var(--accent);font-weight:700;">HTML CSS Support</td>
+                <td style="padding:10px;color:#cbd5e1;">Autocompleta classes CSS no HTML</td>
+            </tr>
+        </table>
+    </div>
+
+</main>
+
+<!-- ====== EXPORT BAR ====== -->
+<div id="export-bar">
+    <span class="status" id="export-status">Suas respostas são salvas automaticamente.</span>
+    <button id="export-btn" onclick="exportarRespostas()">📥 Exportar respostas (.json)</button>
+</div>
+
+<script>
+    // ====== LOCALSTORAGE HELPERS ======
+    const STORAGE_KEY = 'guia_vscode_respostas';
+
+    function carregarDados() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        } catch { return {}; }
+    }
+
+    function salvarDados(dados) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+    }
+
+    // ====== NAME FIELD ======
+    const nameInput = document.getElementById('student-name');
+    const dados = carregarDados();
+    nameInput.value = dados.nome || '';
+    nameInput.addEventListener('input', () => {
+        const d = carregarDados();
+        d.nome = nameInput.value;
+        salvarDados(d);
+    });
+
+    // ====== TEXTAREAS ======
+    document.querySelectorAll('textarea[data-ext]').forEach(ta => {
+        const ext = ta.dataset.ext;
+        const d = carregarDados();
+        if (d.extensoes && d.extensoes[ext]) {
+            ta.value = d.extensoes[ext].reflexao || '';
+        }
+        ta.addEventListener('input', () => {
+            const d = carregarDados();
+            if (!d.extensoes) d.extensoes = {};
+            if (!d.extensoes[ext]) d.extensoes[ext] = {};
+            d.extensoes[ext].reflexao = ta.value;
+            salvarDados(d);
+        });
+    });
+
+    // ====== COMPLETE BUTTONS ======
+    function toggleComplete(btn) {
+        const ext = btn.dataset.ext;
+        const d = carregarDados();
+        if (!d.extensoes) d.extensoes = {};
+        if (!d.extensoes[ext]) d.extensoes[ext] = {};
+
+        d.extensoes[ext].concluido = !d.extensoes[ext].concluido;
+        salvarDados(d);
+        atualizarUI();
+    }
+
+    function atualizarUI() {
+        const d = carregarDados();
+        let concluidas = 0;
+        const total = 5;
+
+        document.querySelectorAll('.complete-btn').forEach(btn => {
+            const ext = btn.dataset.ext;
+            const done = d.extensoes && d.extensoes[ext] && d.extensoes[ext].concluido;
+            if (done) {
+                btn.classList.add('done');
+                btn.innerHTML = '✅ Concluído!';
+                concluidas++;
+            } else {
+                btn.classList.remove('done');
+                btn.innerHTML = '✅ Marcar como concluído';
+            }
+        });
+
+        const pct = Math.round((concluidas / total) * 100);
+        document.getElementById('progress-bar').style.width = pct + '%';
+        document.getElementById('progress-label').textContent = concluidas + ' / ' + total + ' concluídas';
+    }
+
+    // ====== COPY CODE ======
+    function copyCode(btn) {
+        const code = btn.parentElement.querySelector('code').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            btn.textContent = 'Copiado!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = 'Copiar';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    // ====== EXPORT ======
+    function exportarRespostas() {
+        const d = carregarDados();
+        d.exportadoEm = new Date().toISOString();
+        const blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const nomeArquivo = (d.nome || 'aluno').replace(/\s+/g, '_').toLowerCase();
+        a.href = url;
+        a.download = `respostas_guia_vscode_${nomeArquivo}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        const status = document.getElementById('export-status');
+        status.textContent = '✅ Arquivo baixado! Envie para o professor.';
+        status.style.color = 'var(--success)';
+    }
+
+    // ====== INIT ======
+    atualizarUI();
+</script>
+
+</body>
+</html>

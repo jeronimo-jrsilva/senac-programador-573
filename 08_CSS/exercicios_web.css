@@ -1,0 +1,20 @@
+/* 
+  EXERCÍCIO 3: Estilização CSS3 (Desafio de Layout Escuro Premium)
+  -----------------------------------------------------------------
+  Instruções:
+  1. Defina o fundo (background-color) do body para uma cor escura elegante (ex: #121824).
+  2. Defina a cor do texto do body para claro (ex: #e2e8f0).
+  3. Adicione estilos ao ".container":
+     - Defina um fundo ligeiramente mais claro (ex: #1e293b).
+     - Centralize-o usando display: flex (ou margens automáticas).
+     - Adicione bordas arredondadas (border-radius) e uma sombra suave (box-shadow).
+     - Adicione espaçamento interno (padding: 30px).
+  4. Formate as labels para ficarem em negrito e os inputs para terem:
+     - Fundo escuro.
+     - Bordas suaves.
+     - Efeito de foco (focus) mudando a cor da borda ao clicar.
+  5. Estilize o botão com uma cor chamativa (ex: #0284c7) e efeito de hover.
+  6. Formate a tabela com bordas limpas e cabeçalhos em destaque.
+*/
+
+/* Escreva seu CSS abaixo: */

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚀 Quiz de Reforço JS | SENAC Programador de Sistemas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #0f172a;
+      --surface:  #1e293b;
+      --surface2: #263147;
+      --border:   #334155;
+      --accent:   #38bdf8;
+      --accent2:  #818cf8;
+      --success:  #22c55e;
+      --danger:   #f87171;
+      --warning:  #fbbf24;
+      --text:     #f1f5f9;
+      --muted:    #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+    header {
+      background: linear-gradient(135deg, #0c4a6e 0%, #1e1b4b 100%);
+      border-bottom: 2px solid var(--accent);
+      padding: 32px 24px;
+      text-align: center;
+    }
+    header .badge {
+      display: inline-block;
+      background: rgba(56,189,248,.15);
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 4px 16px;
+      font-size: .75rem;
+      color: var(--accent);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      color: var(--accent);
+      letter-spacing: -1px;
+    }
+    header p { color: var(--muted); margin-top: 6px; font-size: .9rem; }
+    #progress-wrap {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    #progress-bar-bg {
+      flex: 1; height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    #progress-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+      transition: width .4s ease;
+    }
+    #progress-label { font-size: .78rem; color: var(--muted); white-space: nowrap; }
+    #score-live { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--warning); white-space: nowrap; }
+    main { max-width: 860px; margin: 0 auto; padding: 32px 20px; }
+    .section-header { display: flex; align-items: center; gap: 14px; margin: 48px 0 24px; }
+    .section-header .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: rgba(56,189,248,.12); border: 1px solid rgba(56,189,248,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+    }
+    .section-header .info h2 {
+      font-size: 1.15rem; font-weight: 700;
+      color: var(--accent); font-family: 'JetBrains Mono', monospace;
+    }
+    .section-header .info p { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+    .concept-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2); border-radius: 12px;
+      padding: 18px 22px; margin-bottom: 28px;
+    }
+    .concept-box h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent2); margin-bottom: 10px; }
+    .concept-box p, .concept-box li { font-size: .88rem; color: #cbd5e1; line-height: 1.7; }
+    .concept-box ul { padding-left: 20px; }
+    .concept-box ul li { margin-bottom: 4px; }
+    .op-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: .82rem; margin: 12px 0; }
+    .op-table th { background: #1a2740; color: var(--accent); padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--accent); }
+    .op-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .op-table tr:hover td { background: var(--surface2); }
+    .op-table .op { color: var(--warning); font-weight: 700; }
+    .op-table .true { color: var(--success); }
+    .op-table .false { color: var(--danger); }
+    .q-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px 26px; margin-bottom: 20px; transition: border-color .3s;
+    }
+    .q-num { font-size: .72rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+    .q-text { font-size: .97rem; font-weight: 600; line-height: 1.6; margin-bottom: 16px; color: var(--text); }
+    .q-text code { font-family: 'JetBrains Mono', monospace; background: #0c1628; border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; font-size: .85em; color: var(--accent); }
+    .code-block {
+      background: #0a1628; border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px 20px; font-family: 'JetBrains Mono', monospace;
+      font-size: .83rem; color: #e2e8f0; line-height: 1.8; margin-bottom: 18px; overflow-x: auto; white-space: pre;
+    }
+    .code-block .kw  { color: #c084fc; }
+    .code-block .str { color: #86efac; }
+    .code-block .num { color: #fbbf24; }
+    .code-block .cmt { color: #475569; font-style: italic; }
+    .code-block .fn  { color: #38bdf8; }
+    .code-block .op  { color: #f472b6; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 18px; background: var(--surface2);
+      border: 2px solid var(--border); border-radius: 10px;
+      cursor: pointer; transition: all .2s; font-size: .9rem; user-select: none;
+    }
+    .option:hover:not(.disabled) { border-color: var(--accent); background: rgba(56,189,248,.08); }
+    .option.disabled { cursor: default; }
+    .option.correct  { border-color: var(--success) !important; background: rgba(34,197,94,.12) !important; }
+    .option.wrong    { border-color: var(--danger)  !important; background: rgba(248,113,113,.12) !important; }
+    .option .letter {
+      width: 28px; height: 28px; border-radius: 8px; background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: .8rem; flex-shrink: 0; transition: background .2s;
+    }
+    .option.correct .letter { background: var(--success); color: #052e16; }
+    .option.wrong   .letter { background: var(--danger);  color: #1a0000; }
+    .option code { font-family: 'JetBrains Mono', monospace; background: #0c1628; border-radius: 4px; padding: 1px 5px; font-size: .85em; color: var(--accent); }
+    .feedback { display: none; margin-top: 14px; padding: 14px 18px; border-radius: 10px; font-size: .87rem; line-height: 1.65; }
+    .feedback.show { display: block; }
+    .feedback.correct { background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.3); }
+    .feedback.wrong   { background: rgba(248,113,113,.12); border: 1px solid rgba(248,113,113,.3); }
+    .feedback .verdict { font-weight: 700; margin-bottom: 6px; font-size: .9rem; }
+    .feedback.correct .verdict { color: var(--success); }
+    .feedback.wrong   .verdict { color: var(--danger); }
+    .feedback p { color: #cbd5e1; }
+    .feedback code { font-family: 'JetBrains Mono', monospace; background: #0c1628; border-radius: 4px; padding: 1px 6px; font-size: .88em; color: var(--accent); }
+    .feedback strong { color: var(--warning); }
+    .tf-wrap { display: flex; gap: 12px; margin-top: 4px; }
+    .tf-btn {
+      flex: 1; padding: 14px; border-radius: 10px; border: 2px solid var(--border);
+      background: var(--surface2); color: var(--text);
+      font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+    }
+    .tf-btn:hover:not(.disabled) { border-color: var(--accent); background: rgba(56,189,248,.1); }
+    .tf-btn.disabled { cursor: default; }
+    .tf-btn.correct  { border-color: var(--success) !important; background: rgba(34,197,94,.2) !important; color: var(--success); }
+    .tf-btn.wrong    { border-color: var(--danger)  !important; background: rgba(248,113,113,.2) !important; color: var(--danger); }
+    #result-panel {
+      display: none; background: var(--surface); border: 2px solid var(--accent);
+      border-radius: 20px; padding: 36px 32px; margin-top: 60px; text-align: center;
+    }
+    #result-panel h2 { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; color: var(--accent); margin-bottom: 8px; }
+    #result-score { font-size: 4rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; margin: 16px 0; }
+    #result-panel p { color: var(--muted); font-size: .9rem; margin-bottom: 24px; }
+    .section-scores { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 20px; }
+    .sec-score { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; text-align: center; min-width: 140px; }
+    .sec-score .sec-icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .sec-score .sec-name { font-size: .75rem; color: var(--muted); }
+    .sec-score .sec-val { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+    .sec-val.good { color: var(--success); }
+    .sec-val.mid  { color: var(--warning); }
+    .sec-val.bad  { color: var(--danger); }
+    #restart-btn {
+      margin-top: 28px; padding: 14px 36px;
+      background: linear-gradient(135deg, #0284c7, #6366f1);
+      border: none; border-radius: 12px; color: #fff;
+      font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: opacity .2s;
+    }
+    #restart-btn:hover { opacity: .85; }
+    @media (max-width: 600px) { .q-card { padding: 18px 16px; } .code-block { font-size: .76rem; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">SENAC Centro · Programador de Sistemas · UC1</div>
+  <h1>🚀 Quiz de Reforço — JavaScript</h1>
+  <p>Do Algoritmo às Coleções</p>
+</header>
+
+<div id="progress-wrap">
+  <div id="progress-bar-bg"><div id="progress-bar"></div></div>
+  <span id="progress-label">0 / 30 respondidas</span>
+  <span id="score-live">⭐ 0 pts</span>
+</div>
+
+<main id="quiz-main">
+
+<!-- ═══ SEÇÃO 1: ALGORITMOS ═══ -->
+<div class="section-header">
+  <div class="icon">🧠</div>
+  <div class="info">
+    <h2>Seção 1 — Algoritmos</h2>
+    <p>O que é um algoritmo? Como o computador pensa?</p>
+  </div>
+</div>
+
+<div class="concept-box">
+  <h3>📌 Conceito Rápido</h3>
+  <p>Um <strong>algoritmo</strong> é uma sequência de passos <strong>ordenados</strong> e <strong>finitos</strong> para resolver um problema. Computadores seguem algoritmos à risca — sem improvisar, sem pular etapas.</p>
+</div>
+
+<div class="q-card" id="q1" data-section="1" data-correct="B" data-pts="1">
+  <div class="q-num">Questão 01</div>
+  <div class="q-text">Você acorda de manhã e precisa fazer café. Qual sequência é um algoritmo correto?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>Ligar a chaleira → Tomar banho → Colocar o pó → Esperar</div>
+    <div class="option" data-val="B"><div class="letter">B</div>Ferver a água → Colocar o filtro → Adicionar o pó → Despejar a água → Servir</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Servir o café → Ferver a água → Colocar o pó</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Qualquer ordem funciona, café sempre sai</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q2" data-section="1" data-correct="C" data-pts="1">
+  <div class="q-num">Questão 02</div>
+  <div class="q-text">O que torna um algoritmo diferente de uma lista aleatória de instruções?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>Ele precisa ser escrito em inglês</div>
+    <div class="option" data-val="B"><div class="letter">B</div>Ele precisa usar código JavaScript</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Os passos são ordenados, finitos e resolvem um problema específico</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Ele precisa ter pelo menos 10 etapas</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q3" data-section="1" data-correct="A" data-pts="1">
+  <div class="q-num">Questão 03</div>
+  <div class="q-text">Em programação, o computador executa as linhas de código em qual ordem padrão?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>De cima para baixo, linha por linha, na ordem em que foram escritas</div>
+    <div class="option" data-val="B"><div class="letter">B</div>Ele escolhe a mais fácil primeiro</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Da última linha para a primeira</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Em ordem aleatória, dependendo do processador</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<!-- ═══ SEÇÃO 2: VARIÁVEIS ═══ -->
+<div class="section-header">
+  <div class="icon">📦</div>
+  <div class="info">
+    <h2>Seção 2 — Variáveis e Tipos de Dados</h2>
+    <p>Caixinhas que guardam informação na memória</p>
+  </div>
+</div>
+
+<div class="concept-box">
+  <h3>📌 Conceito Rápido</h3>
+  <ul>
+    <li><strong>let</strong> → cria uma variável que pode mudar de valor</li>
+    <li><strong>const</strong> → cria uma constante que nunca muda</li>
+    <li><strong>string</strong> → texto, sempre entre aspas: <code>"João"</code></li>
+    <li><strong>number</strong> → número sem aspas: <code>25</code>, <code>3.14</code></li>
+    <li><strong>boolean</strong> → só dois valores: <code>true</code> ou <code>false</code></li>
+  </ul>
+</div>
+
+<div class="q-card" id="q4" data-section="2" data-correct="B" data-pts="1">
+  <div class="q-num">Questão 04</div>
+  <div class="q-text">Qual das linhas abaixo guarda o nome de uma pessoa corretamente?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div><code>let nome = João;</code></div>
+    <div class="option" data-val="B"><div class="letter">B</div><code>let nome = "João";</code></div>
+    <div class="option" data-val="C"><div class="letter">C</div><code>let "nome" = João;</code></div>
+    <div class="option" data-val="D"><div class="letter">D</div><code>const = "João";</code></div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q5" data-section="2" data-correct="C" data-pts="1">
+  <div class="q-num">Questão 05</div>
+  <div class="q-text">Qual é o tipo de dado da variável abaixo?<br><code>let aprovado = true;</code></div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>string</div>
+    <div class="option" data-val="B"><div class="letter">B</div>number</div>
+    <div class="option" data-val="C"><div class="letter">C</div>boolean</div>
+    <div class="option" data-val="D"><div class="letter">D</div>array</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q6" data-section="2" data-correct="A" data-pts="1">
+  <div class="q-num">Questão 06</div>
+  <div class="q-text">O que o <code>console.log()</code> faz no JavaScript?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>Exibe uma mensagem no terminal para o programador ver</div>
+    <div class="option" data-val="B"><div class="letter">B</div>Salva a variável permanentemente no computador</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Cria uma nova variável</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Apaga o conteúdo da variável</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q7" data-section="2" data-correct="false" data-pts="1">
+  <div class="q-num">Questão 07 — Verdadeiro ou Falso?</div>
+  <div class="q-text"><code>const PI = 3.14;</code><br>É possível depois fazer <code>PI = 3.99;</code> sem nenhum erro?</div>
+  <div class="tf-wrap">
+    <button class="tf-btn" data-val="true">✅ Verdadeiro</button>
+    <button class="tf-btn" data-val="false">❌ Falso</button>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<!-- ═══ SEÇÃO 3: OPERADORES RELACIONAIS ═══ -->
+<div class="section-header">
+  <div class="icon">⚖️</div>
+  <div class="info">
+    <h2>Seção 3 — Operadores Relacionais ⭐</h2>
+    <p>Comparações que resultam em true ou false — a base de toda lógica</p>
+  </div>
+</div>
+
+<div class="concept-box">
+  <h3>📌 Tabela dos Operadores — Consulte sempre que precisar!</h3>
+  <table class="op-table">
+    <thead><tr><th>Operador</th><th>Significado</th><th>Exemplo</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td class="op">===</td><td>Igual (valor E tipo)</td><td>5 === 5</td><td class="true">true</td></tr>
+      <tr><td class="op">!==</td><td>Diferente</td><td>5 !== 3</td><td class="true">true</td></tr>
+      <tr><td class="op">&gt;</td><td>Maior que</td><td>10 &gt; 3</td><td class="true">true</td></tr>
+      <tr><td class="op">&lt;</td><td>Menor que</td><td>2 &lt; 1</td><td class="false">false</td></tr>
+      <tr><td class="op">&gt;=</td><td>Maior ou igual</td><td>7 &gt;= 7</td><td class="true">true</td></tr>
+      <tr><td class="op">&lt;=</td><td>Menor ou igual</td><td>4 &lt;= 3</td><td class="false">false</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:10px;font-size:.82rem;color:#94a3b8;">⚠️ <strong style="color:#fbbf24">Atenção:</strong> <code>=</code> (um igual) <strong>atribui</strong> valor. <code>===</code> (três iguais) <strong>compara</strong>. São coisas completamente diferentes!</p>
+</div>
+
+<div class="q-card" id="q8" data-section="3" data-correct="B" data-pts="1">
+  <div class="q-num">Questão 08</div>
+  <div class="q-text">Qual o resultado de <code>10 &gt; 5</code>?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div><code>false</code></div>
+    <div class="option" data-val="B"><div class="letter">B</div><code>true</code></div>
+    <div class="option" data-val="C"><div class="letter">C</div><code>10</code></div>
+    <div class="option" data-val="D"><div class="letter">D</div><code>5</code></div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q9" data-section="3" data-correct="A" data-pts="1">
+  <div class="q-num">Questão 09</div>
+  <div class="q-text">Qual o resultado de <code>7 === 7</code>?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div><code>true</code></div>
+    <div class="option" data-val="B"><div class="letter">B</div><code>false</code></div>
+    <div class="option" data-val="C"><div class="letter">C</div><code>7</code></div>
+    <div class="option" data-val="D"><div class="letter">D</div>Erro — não pode comparar número com número</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q10" data-section="3" data-correct="C" data-pts="1">
+  <div class="q-num">Questão 10</div>
+  <div class="q-text">Qual a diferença entre <code>=</code> e <code>===</code> no JavaScript?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>Não há diferença. Os dois fazem a mesma coisa</div>
+    <div class="option" data-val="B"><div class="letter">B</div><code>=</code> compara e <code>===</code> atribui</div>
+    <div class="option" data-val="C"><div class="letter">C</div><code>=</code> atribui valor a uma variável. <code>===</code> compara se dois valores são iguais</div>
+    <div class="option" data-val="D"><div class="letter">D</div><code>===</code> é usado só em Python, não em JavaScript</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q11" data-section="3" data-correct="D" data-pts="1">
+  <div class="q-num">Questão 11</div>
+  <div class="q-text">Qual o resultado de <code>5 !== 5</code>?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div><code>true</code>, porque 5 é diferente de 5</div>
+    <div class="option" data-val="B"><div class="letter">B</div><code>5</code></div>
+    <div class="option" data-val="C"><div class="letter">C</div>Erro de sintaxe</div>
+    <div class="option" data-val="D"><div class="letter">D</div><code>false</code>, porque 5 é igual a 5 (não são diferentes)</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q12" data-section="3" data-correct="B" data-pts="1">
+  <div class="q-num">Questão 12</div>
+  <div class="q-text">A nota de um aluno é 7. O que o código vai imprimir?
+  <div class="code-block"><span class="kw">let</span> nota <span class="op">=</span> <span class="num">7</span>;
+console.<span class="fn">log</span>(nota <span class="op">>=</span> <span class="num">7</span>);</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div><code>false</code> — 7 não é MAIOR que 7</div>
+    <div class="option" data-val="B"><div class="letter">B</div><code>true</code> — o operador &gt;= aceita também o igual</div>
+    <div class="option" data-val="C"><div class="letter">C</div><code>7</code></div>
+    <div class="option" data-val="D"><div class="letter">D</div>Erro no código</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q13" data-section="3" data-correct="true" data-pts="1">
+  <div class="q-num">Questão 13 — Verdadeiro ou Falso?</div>
+  <div class="q-text">O resultado de qualquer comparação relacional em JavaScript é sempre um valor <strong>booleano</strong> (<code>true</code> ou <code>false</code>).</div>
+  <div class="tf-wrap">
+    <button class="tf-btn" data-val="true">✅ Verdadeiro</button>
+    <button class="tf-btn" data-val="false">❌ Falso</button>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q14" data-section="3" data-correct="C" data-pts="2">
+  <div class="q-num">Questão 14 — Desafio ⭐</div>
+  <div class="q-text">Analise as afirmações e marque a opção que lista SOMENTE as verdadeiras:<br><br>
+    I) &nbsp;<code>3 &lt; 10</code> &rarr; <code>true</code><br>
+    II) &nbsp;<code>10 === "10"</code> &rarr; <code>true</code><br>
+    III) &nbsp;<code>5 &lt;= 5</code> &rarr; <code>true</code><br>
+    IV) &nbsp;<code>8 !== 9</code> &rarr; <code>false</code>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>I, II e III</div>
+    <div class="option" data-val="B"><div class="letter">B</div>Todas (I, II, III e IV)</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Apenas I e III</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Apenas IV</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<!-- ═══ SEÇÃO 4: CONDICIONAIS ═══ -->
+<div class="section-header">
+  <div class="icon">🔀</div>
+  <div class="info">
+    <h2>Seção 4 — Condicionais (if / else)</h2>
+    <p>Leia o código e preveja o que acontece</p>
+  </div>
+</div>
+
+<div class="concept-box">
+  <h3>📌 Conceito Rápido</h3>
+  <p>O <strong>if</strong> testa uma condição. Se for <code>true</code>, executa o bloco. Se for <code>false</code>, pula para o <strong>else</strong>. O computador <em>nunca</em> executa os dois ao mesmo tempo.</p>
+</div>
+
+<div class="q-card" id="q15" data-section="4" data-correct="A" data-pts="1">
+  <div class="q-num">Questão 15</div>
+  <div class="q-text">O que o código abaixo vai imprimir?
+  <div class="code-block"><span class="kw">let</span> temperatura <span class="op">=</span> <span class="num">35</span>;
+
+<span class="kw">if</span> (temperatura <span class="op">&gt;</span> <span class="num">30</span>) {
+  console.<span class="fn">log</span>(<span class="str">"Está calor!"</span>);
+} <span class="kw">else</span> {
+  console.<span class="fn">log</span>(<span class="str">"Está fresco."</span>);
+}</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>"Está calor!"</div>
+    <div class="option" data-val="B"><div class="letter">B</div>"Está fresco."</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Imprime os dois</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Não imprime nada</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q16" data-section="4" data-correct="B" data-pts="1">
+  <div class="q-num">Questão 16</div>
+  <div class="q-text">O que o código abaixo vai imprimir?
+  <div class="code-block"><span class="kw">let</span> nota <span class="op">=</span> <span class="num">5</span>;
+
+<span class="kw">if</span> (nota <span class="op">&gt;=</span> <span class="num">7</span>) {
+  console.<span class="fn">log</span>(<span class="str">"Aprovado!"</span>);
+} <span class="kw">else</span> {
+  console.<span class="fn">log</span>(<span class="str">"Recuperação."</span>);
+}</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>"Aprovado!"</div>
+    <div class="option" data-val="B"><div class="letter">B</div>"Recuperação."</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Imprime os dois</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Erro — não pode usar &gt;= com nota</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q17" data-section="4" data-correct="C" data-pts="1">
+  <div class="q-num">Questão 17</div>
+  <div class="q-text">O que o código abaixo vai imprimir?
+  <div class="code-block"><span class="kw">let</span> idade <span class="op">=</span> <span class="num">17</span>;
+
+<span class="kw">if</span> (idade <span class="op">&gt;=</span> <span class="num">18</span>) {
+  console.<span class="fn">log</span>(<span class="str">"Pode entrar."</span>);
+} <span class="kw">else if</span> (idade <span class="op">&gt;=</span> <span class="num">16</span>) {
+  console.<span class="fn">log</span>(<span class="str">"Pode entrar com responsável."</span>);
+} <span class="kw">else</span> {
+  console.<span class="fn">log</span>(<span class="str">"Proibido."</span>);
+}</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>"Pode entrar."</div>
+    <div class="option" data-val="B"><div class="letter">B</div>"Proibido."</div>
+    <div class="option" data-val="C"><div class="letter">C</div>"Pode entrar com responsável."</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Imprime as três mensagens</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q18" data-section="4" data-correct="false" data-pts="1">
+  <div class="q-num">Questão 18 — Verdadeiro ou Falso?</div>
+  <div class="q-text">Um bloco <code>if/else</code> pode executar o bloco <code>if</code> E o bloco <code>else</code> ao mesmo tempo.</div>
+  <div class="tf-wrap">
+    <button class="tf-btn" data-val="true">✅ Verdadeiro</button>
+    <button class="tf-btn" data-val="false">❌ Falso</button>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<!-- ═══ SEÇÃO 5: LOOPS ═══ -->
+<div class="section-header">
+  <div class="icon">🔁</div>
+  <div class="info">
+    <h2>Seção 5 — Repetição (Loops)</h2>
+    <p>while e for — automatizando a repetição</p>
+  </div>
+</div>
+
+<div class="concept-box">
+  <h3>📌 Conceito Rápido</h3>
+  <ul>
+    <li><strong>while</strong> → repete enquanto a condição for <code>true</code>. Você controla quando para.</li>
+    <li><strong>for</strong> → tem início, condição e incremento embutidos. Ideal quando você sabe quantas vezes repetir.</li>
+  </ul>
+</div>
+
+<div class="q-card" id="q19" data-section="5" data-correct="C" data-pts="1">
+  <div class="q-num">Questão 19</div>
+  <div class="q-text">Quantas vezes o código abaixo vai imprimir "Oi"?
+  <div class="code-block"><span class="kw">let</span> i <span class="op">=</span> <span class="num">0</span>;
+
+<span class="kw">while</span> (i <span class="op">&lt;</span> <span class="num">3</span>) {
+  console.<span class="fn">log</span>(<span class="str">"Oi"</span>);
+  i<span class="op">++</span>;
+}</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>0 vezes</div>
+    <div class="option" data-val="B"><div class="letter">B</div>2 vezes</div>
+    <div class="option" data-val="C"><div class="letter">C</div>3 vezes</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Infinitamente — é um loop infinito</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q20" data-section="5" data-correct="A" data-pts="1">
+  <div class="q-num">Questão 20</div>
+  <div class="q-text">O que acontece se um loop <code>while</code> nunca tiver sua condição alterada dentro do bloco?</div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>O programa trava em um loop infinito</div>
+    <div class="option" data-val="B"><div class="letter">B</div>O JavaScript para sozinho depois de 10 repetições</div>
+    <div class="option" data-val="C"><div class="letter">C</div>O programa pula o loop e continua normalmente</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Não é possível criar um loop infinito em JS</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q21" data-section="5" data-correct="B" data-pts="1">
+  <div class="q-num">Questão 21</div>
+  <div class="q-text">O que vai acontecer com a versão modificada (com <code>i--</code>) do código abaixo?
+  <div class="code-block"><span class="cmt">// VERSÃO CORRETA — imprime 1, 2, 3, 4, 5:</span>
+<span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">1</span>; i <span class="op">&lt;=</span> <span class="num">5</span>; i<span class="op">++</span>) { console.<span class="fn">log</span>(i); }
+
+<span class="cmt">// VERSÃO MODIFICADA — o que acontece?</span>
+<span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">1</span>; i <span class="op">&lt;=</span> <span class="num">5</span>; i<span class="op">--</span>) { console.<span class="fn">log</span>(i); }</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>Vai imprimir de 5 a 1 (ao contrário)</div>
+    <div class="option" data-val="B"><div class="letter">B</div>Loop infinito — <code>i--</code> diminui i para sempre, nunca chegando acima de 5</div>
+    <div class="option" data-val="C"><div class="letter">C</div>Não há diferença entre <code>i++</code> e <code>i--</code></div>
+    <div class="option" data-val="D"><div class="letter">D</div>O <code>for</code> não aceita <code>i--</code> como sintaxe</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<!-- ═══ SEÇÃO 6: ARRAYS E COLEÇÕES ═══ -->
+<div class="section-header">
+  <div class="icon">📋</div>
+  <div class="info">
+    <h2>Seção 6 — Arrays e Coleções</h2>
+    <p>Listas ordenadas e dicionários chave-valor</p>
+  </div>
+</div>
+
+<div class="concept-box">
+  <h3>📌 Conceito Rápido — Arrays</h3>
+  <ul>
+    <li>O índice sempre começa em <strong>0</strong> (zero), nunca em 1</li>
+    <li><code>.push()</code> → adiciona no <strong>fim</strong></li>
+    <li><code>.pop()</code> → remove o <strong>último</strong></li>
+    <li><code>.unshift()</code> → adiciona no <strong>início</strong></li>
+    <li><code>.shift()</code> → remove o <strong>primeiro</strong></li>
+    <li><code>.includes(x)</code> → retorna <code>true</code> se x existir na lista</li>
+    <li><code>.splice(i, q, novo)</code> → remove q itens a partir do índice i e insere novo</li>
+  </ul>
+</div>
+
+<div class="q-card" id="q22" data-section="6" data-correct="A" data-pts="1">
+  <div class="q-num">Questão 22</div>
+  <div class="q-text">Dado o array abaixo, qual é o valor de <code>frutas[0]</code>?
+  <div class="code-block"><span class="kw">let</span> frutas <span class="op">=</span> [<span class="str">"Maçã"</span>, <span class="str">"Banana"</span>, <span class="str">"Uva"</span>];</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>"Maçã"</div>
+    <div class="option" data-val="B"><div class="letter">B</div>"Banana"</div>
+    <div class="option" data-val="C"><div class="letter">C</div>"Uva"</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Erro — arrays começam no índice 1</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q23" data-section="6" data-correct="C" data-pts="1">
+  <div class="q-num">Questão 23</div>
+  <div class="q-text">O que a lista vai conter após o código abaixo?
+  <div class="code-block"><span class="kw">let</span> playlist <span class="op">=</span> [<span class="str">"Yesterday"</span>, <span class="str">"Halo"</span>, <span class="str">"Starboy"</span>];
+playlist.<span class="fn">push</span>(<span class="str">"Blinding Lights"</span>);</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>["Blinding Lights", "Yesterday", "Halo", "Starboy"]</div>
+    <div class="option" data-val="B"><div class="letter">B</div>["Yesterday", "Halo", "Starboy"] — push não funciona com strings</div>
+    <div class="option" data-val="C"><div class="letter">C</div>["Yesterday", "Halo", "Starboy", "Blinding Lights"]</div>
+    <div class="option" data-val="D"><div class="letter">D</div>["Yesterday", "Blinding Lights", "Halo", "Starboy"]</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q24" data-section="6" data-correct="B" data-pts="2">
+  <div class="q-num">Questão 24 — 🎵 Exercício da Aula de Hoje!</div>
+  <div class="q-text">Qual a playlist FINAL após executar o código abaixo?
+  <div class="code-block"><span class="kw">let</span> playlist <span class="op">=</span> [<span class="str">"Yesterday"</span>, <span class="str">"Bohemian Rhapsody"</span>, <span class="str">"Halo"</span>];
+playlist.<span class="fn">splice</span>(<span class="num">1</span>, <span class="num">1</span>, <span class="str">"Starboy"</span>);</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>["Yesterday", "Bohemian Rhapsody", "Halo", "Starboy"]</div>
+    <div class="option" data-val="B"><div class="letter">B</div>["Yesterday", "Starboy", "Halo"]</div>
+    <div class="option" data-val="C"><div class="letter">C</div>["Starboy", "Yesterday", "Halo"]</div>
+    <div class="option" data-val="D"><div class="letter">D</div>["Yesterday", "Bohemian Rhapsody", "Starboy"]</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q25" data-section="6" data-correct="A" data-pts="1">
+  <div class="q-num">Questão 25</div>
+  <div class="q-text">O que o código abaixo vai imprimir?
+  <div class="code-block"><span class="kw">let</span> convidados <span class="op">=</span> [<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>, <span class="str">"Carlos"</span>];
+console.<span class="fn">log</span>(convidados.<span class="fn">includes</span>(<span class="str">"Bruno"</span>));</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div><code>true</code></div>
+    <div class="option" data-val="B"><div class="letter">B</div><code>false</code></div>
+    <div class="option" data-val="C"><div class="letter">C</div><code>"Bruno"</code></div>
+    <div class="option" data-val="D"><div class="letter">D</div><code>1</code> (o índice de Bruno)</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q26" data-section="6" data-correct="C" data-pts="1">
+  <div class="q-num">Questão 26</div>
+  <div class="q-text">O que o código abaixo vai imprimir?
+  <div class="code-block"><span class="kw">let</span> nomes <span class="op">=</span> [<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>, <span class="str">"Carlos"</span>];
+
+<span class="kw">for</span> (<span class="kw">let</span> nome <span class="kw">of</span> nomes) {
+  console.<span class="fn">log</span>(nome);
+}</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>Apenas "Ana"</div>
+    <div class="option" data-val="B"><div class="letter">B</div>["Ana", "Bruno", "Carlos"] em uma só linha</div>
+    <div class="option" data-val="C"><div class="letter">C</div>"Ana", depois "Bruno", depois "Carlos" — um por linha</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Apenas o último: "Carlos"</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q27" data-section="6" data-correct="B" data-pts="1">
+  <div class="q-num">Questão 27 — Objetos</div>
+  <div class="q-text">O que o código vai imprimir?
+  <div class="code-block"><span class="kw">let</span> aluno <span class="op">=</span> {
+  nome: <span class="str">"João"</span>,
+  curso: <span class="str">"Programador"</span>,
+  turno: <span class="str">"Noite"</span>
+};
+
+console.<span class="fn">log</span>(aluno.curso);</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>"Danúbio"</div>
+    <div class="option" data-val="B"><div class="letter">B</div>"Programador"</div>
+    <div class="option" data-val="C"><div class="letter">C</div>"Noite"</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Imprime o objeto inteiro</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q28" data-section="6" data-correct="true" data-pts="1">
+  <div class="q-num">Questão 28 — Verdadeiro ou Falso?</div>
+  <div class="q-text">Em um array, o último elemento da lista sempre está no índice <code>array.length - 1</code>.</div>
+  <div class="tf-wrap">
+    <button class="tf-btn" data-val="true">✅ Verdadeiro</button>
+    <button class="tf-btn" data-val="false">❌ Falso</button>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q29" data-section="6" data-correct="D" data-pts="2">
+  <div class="q-num">Questão 29 — Desafio ⭐⭐</div>
+  <div class="q-text">Qual é o estado FINAL do array após todo o código?
+  <div class="code-block"><span class="kw">let</span> fila <span class="op">=</span> [<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>, <span class="str">"Carlos"</span>];
+fila.<span class="fn">push</span>(<span class="str">"Diana"</span>);   <span class="cmt">// Passo 1</span>
+fila.<span class="fn">shift</span>();           <span class="cmt">// Passo 2</span>
+fila.<span class="fn">unshift</span>(<span class="str">"Eva"</span>);   <span class="cmt">// Passo 3</span></div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>["Eva", "Ana", "Bruno", "Carlos", "Diana"]</div>
+    <div class="option" data-val="B"><div class="letter">B</div>["Bruno", "Carlos", "Diana", "Eva"]</div>
+    <div class="option" data-val="C"><div class="letter">C</div>["Ana", "Bruno", "Carlos", "Diana"]</div>
+    <div class="option" data-val="D"><div class="letter">D</div>["Eva", "Bruno", "Carlos", "Diana"]</div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<div class="q-card" id="q30" data-section="6" data-correct="C" data-pts="2">
+  <div class="q-num">Questão 30 — Integração Final 🏆</div>
+  <div class="q-text">O que o código abaixo vai imprimir?
+  <div class="code-block"><span class="kw">let</span> notas <span class="op">=</span> [<span class="num">8</span>, <span class="num">6</span>, <span class="num">9</span>];
+<span class="kw">let</span> soma <span class="op">=</span> <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">let</span> nota <span class="kw">of</span> notas) {
+  soma <span class="op">=</span> soma <span class="op">+</span> nota;
+}
+
+<span class="kw">let</span> media <span class="op">=</span> soma <span class="op">/</span> notas.length;
+
+<span class="kw">if</span> (media <span class="op">&gt;=</span> <span class="num">7</span>) {
+  console.<span class="fn">log</span>(<span class="str">"Aprovado! Média:"</span>, media);
+} <span class="kw">else</span> {
+  console.<span class="fn">log</span>(<span class="str">"Recuperação. Média:"</span>, media);
+}</div>
+  </div>
+  <div class="options">
+    <div class="option" data-val="A"><div class="letter">A</div>"Recuperação. Média: 7.666..."</div>
+    <div class="option" data-val="B"><div class="letter">B</div>"Aprovado! Média: 23" (exibe a soma total)</div>
+    <div class="option" data-val="C"><div class="letter">C</div>"Aprovado! Média: 7.666..."</div>
+    <div class="option" data-val="D"><div class="letter">D</div>Erro — não é possível dividir por <code>notas.length</code></div>
+  </div>
+  <div class="feedback"><div class="verdict"></div><p></p></div>
+</div>
+
+<!-- RESULTADO -->
+<div id="result-panel">
+  <h2>🏆 Resultado Final</h2>
+  <div id="result-score"></div>
+  <p id="result-msg"></p>
+  <div class="section-scores" id="section-scores"></div>
+  <button id="restart-btn" onclick="restartQuiz()">🔄 Recomeçar do Zero</button>
+</div>
+
+</main>
+
+<script>
+const FEEDBACK = {
+  q1:  { ok:"✅ Correto! Um algoritmo tem passos em ordem lógica. Você não pode servir o café antes de fervê-la.", err:"❌ Um algoritmo precisa de <strong>ordem lógica</strong>. Passos fora de ordem invalidam o resultado." },
+  q2:  { ok:"✅ Exatamente! Ordenados, finitos e com propósito definido — as três marcas de um algoritmo.", err:"❌ Algoritmo não depende de linguagem nem de tamanho. O essencial: passos <strong>ordenados, finitos e com objetivo</strong>." },
+  q3:  { ok:"✅ Correto! O computador segue o <strong>fluxo sequencial</strong>: cima para baixo, linha por linha.", err:"❌ O computador segue sempre de <strong>cima para baixo</strong>, linha por linha, salvo se uma estrutura (if, loop) desviar o fluxo." },
+  q4:  { ok:"✅ Perfeito! Textos (strings) precisam estar entre aspas: <code>\"João\"</code>.", err:"❌ Textos (strings) SEMPRE precisam de aspas. Sem aspas, o JS interpreta como nome de variável — e isso causa erro." },
+  q5:  { ok:"✅ Correto! <code>true</code> e <code>false</code> são os dois únicos valores do tipo <strong>boolean</strong>.", err:"❌ <code>true</code> é um valor <strong>boolean</strong> (booleano). Não é string nem number." },
+  q6:  { ok:"✅ Exato! <code>console.log()</code> exibe informação no terminal — é a ferramenta do programador.", err:"❌ <code>console.log()</code> apenas <strong>exibe</strong> no terminal. Não salva, não cria variáveis, não apaga nada." },
+  q7:  { ok:"✅ Correto! <code>const</code> cria uma constante. Reatribuir causa <strong>TypeError</strong>.", err:"❌ <code>const</code> = <strong>constante</strong>. Uma vez definida, não pode mudar. Tentar mudar causaria <strong>TypeError: Assignment to constant variable</strong>." },
+  q8:  { ok:"✅ Correto! 10 é maior que 5, então o resultado é <code>true</code>.", err:"❌ Comparações relacionais sempre retornam <code>true</code> ou <code>false</code>. Como 10 > 5, o resultado é <code>true</code>." },
+  q9:  { ok:"✅ Correto! <code>===</code> verifica igualdade. 7 é igual a 7, retorna <code>true</code>.", err:"❌ <code>===</code> compara valores. 7 é igual a 7, resultado: <code>true</code>." },
+  q10: { ok:"✅ Perfeito! <code>=</code> <strong>atribui</strong>. <code>===</code> <strong>compara</strong>. Confundir os dois é um dos erros mais comuns em JS!", err:"❌ <code>=</code> <strong>atribui</strong> (copia um valor para a variável). <code>===</code> <strong>compara</strong> (verifica se dois valores são iguais). São completamente diferentes!" },
+  q11: { ok:"✅ Correto! <code>!==</code> pergunta 'são diferentes?'. 5 e 5 são iguais → a resposta é <code>false</code>.", err:"❌ <code>!==</code> significa 'diferente de'. 5 e 5 são iguais, então a afirmação de que são diferentes é <strong>false</strong>." },
+  q12: { ok:"✅ Exato! O operador <code>>=</code> é 'maior <strong>ou</strong> igual'. 7 é igual a 7 → condição satisfeita → <code>true</code>.", err:"❌ O operador <code>>=</code> aceita o caso de igualdade também! Como 7 é igual a 7, a condição é <code>true</code>." },
+  q13: { ok:"✅ Correto! Todo operador relacional sempre retorna <code>true</code> ou <code>false</code> — sem exceção.", err:"❌ Sempre! Qualquer comparação relacional em JS retorna <strong>exclusivamente</strong> <code>true</code> ou <code>false</code>." },
+  q14: { ok:"✅ Excelente! I: <code>3 &lt; 10</code> → <code>true</code> ✅. II: <code>10 === \"10\"</code> → <strong>false</strong> (tipos diferentes: number ≠ string). III: <code>5 &lt;= 5</code> → <code>true</code> ✅. IV: <code>8 !== 9</code> → <strong>true</strong> (8 e 9 são de fato diferentes), não false.", err:"❌ II é <code>false</code>: <code>===</code> compara tipo também — number e string são tipos diferentes! IV é <code>true</code> (8 e 9 são diferentes), não false. Portanto, apenas I e III são verdadeiras." },
+  q15: { ok:"✅ Correto! <code>35 > 30</code> é <code>true</code>, então o bloco <code>if</code> executa.", err:"❌ <code>35 > 30</code> é <code>true</code>. O bloco <code>if</code> executa e imprime 'Está calor!'. O <code>else</code> é ignorado." },
+  q16: { ok:"✅ Correto! <code>5 >= 7</code> é <code>false</code>, então o programa vai para o <code>else</code>.", err:"❌ <code>5 >= 7</code> é <code>false</code>. Quando o <code>if</code> falha, o programa vai direto para o bloco <code>else</code>." },
+  q17: { ok:"✅ Correto! JS verifica de cima para baixo. 17 não é >= 18, mas é >= 16 → segundo bloco.", err:"❌ O JS verifica condição por condição. 17 não é >= 18 (1º if), mas 17 >= 16 é <code>true</code> (else if) → executa o segundo bloco." },
+  q18: { ok:"✅ Correto! <code>if/else</code> é mutuamente exclusivo. Ou um, ou outro — nunca os dois.", err:"❌ Falso! Um <code>if/else</code> sempre executa <strong>apenas um</strong> dos dois blocos — nunca os dois simultaneamente." },
+  q19: { ok:"✅ Correto! i=0 (imprime), i=1 (imprime), i=2 (imprime), i=3 → <code>3 < 3</code> é false → para. Total: 3 vezes.", err:"❌ Conte: i=0 → imprime, i=1 → imprime, i=2 → imprime, i=3 → <code>3 < 3</code> é false → para. Total: <strong>3 vezes</strong>." },
+  q20: { ok:"✅ Correto! Um while sem incremento trava em loop infinito. Um dos bugs mais comuns.", err:"❌ O JS não tem proteção automática. Um while cuja condição nunca muda roda para sempre — <strong>loop infinito</strong>." },
+  q21: { ok:"✅ Correto! Com <code>i--</code>, i fica 1, 0, -1, -2... A condição <code>i <= 5</code> é sempre true → loop infinito!", err:"❌ Com <code>i--</code>, i diminui: 1, 0, -1, -2... e nunca vai superar 5. A condição <code>i <= 5</code> é SEMPRE verdadeira → <strong>loop infinito</strong>!" },
+  q22: { ok:"✅ Correto! Arrays começam no índice <strong>0</strong>. O índice 0 é sempre o primeiro elemento.", err:"❌ Arrays começam no índice <strong>0</strong>! frutas[0] = 'Maçã', frutas[1] = 'Banana', frutas[2] = 'Uva'." },
+  q23: { ok:"✅ Correto! <code>.push()</code> sempre adiciona no <strong>final</strong> da lista.", err:"❌ <code>.push()</code> adiciona no <strong>final</strong> do array. 'Blinding Lights' vai para a última posição." },
+  q24: { ok:"✅ Correto! <code>splice(1, 1, 'Starboy')</code> = no índice 1, remove 1 item ('Bohemian Rhapsody') e insere 'Starboy'. Resultado: ['Yesterday', 'Starboy', 'Halo'].", err:"❌ <code>splice(1, 1, 'Starboy')</code>: vá ao índice 1, <strong>remova 1 item</strong> ('Bohemian Rhapsody'), insira 'Starboy'. Resultado: <strong>['Yesterday', 'Starboy', 'Halo']</strong>." },
+  q25: { ok:"✅ Correto! <code>.includes('Bruno')</code> encontra Bruno e retorna <code>true</code>.", err:"❌ <code>.includes()</code> retorna <code>true</code> ou <code>false</code>. Como 'Bruno' está na lista, retorna <code>true</code>." },
+  q26: { ok:"✅ Correto! O <code>for...of</code> itera cada elemento e imprime um por linha.", err:"❌ O <code>for...of</code> executa o bloco para cada item separadamente. Cada <code>console.log</code> imprime um nome por vez." },
+  q27: { ok:"✅ Correto! <code>aluno.curso</code> acessa especificamente a propriedade <code>curso</code> = 'Programador'.", err:"❌ <code>aluno.curso</code> acessa a propriedade <code>curso</code> do objeto, que é <strong>'Programador'</strong>." },
+  q28: { ok:"✅ Correto! Índices começam em 0, então o último é sempre <code>length - 1</code>. Array de 3 itens → último índice é 2.", err:"❌ Verdadeiro! Índices começam em 0. Array com 3 itens: índices 0, 1 e 2. Último = <code>length - 1</code> = 2." },
+  q29: { ok:"✅ Excelente! Início: ['Ana','Bruno','Carlos'] → push('Diana'): [...,'Diana'] → shift() remove 'Ana': ['Bruno','Carlos','Diana'] → unshift('Eva'): ['Eva','Bruno','Carlos','Diana'].", err:"❌ Passo a passo: Início: ['Ana','Bruno','Carlos'] → <code>push('Diana')</code>: ['Ana','Bruno','Carlos',<strong>'Diana'</strong>] → <code>shift()</code>: remove <strong>'Ana'</strong> → ['Bruno','Carlos','Diana'] → <code>unshift('Eva')</code>: [<strong>'Eva'</strong>,'Bruno','Carlos','Diana']" },
+  q30: { ok:"✅ Perfeito! soma = 8+6+9 = 23. média = 23/3 ≈ 7.667. Como 7.667 >= 7 é true → 'Aprovado! Média: 7.666...'", err:"❌ Calcule: soma = 8+6+9 = <strong>23</strong>. Média = 23 ÷ 3 = <strong>7.666...</strong>. Como 7.666 >= 7 é <code>true</code> → 'Aprovado! Média: 7.666...'" },
+};
+
+let answered = 0;
+let totalPoints = 0;
+const totalQ = 30;
+const maxPoints = 34;
+const sectionPoints = {1:0,2:0,3:0,4:0,5:0,6:0};
+const sectionMax    = {1:3,2:4,3:8,4:4,5:3,6:12};
+const sectionNames  = {1:"Algoritmos",2:"Variáveis",3:"Operadores",4:"Condicionais",5:"Loops",6:"Coleções"};
+const sectionIcons  = {1:"🧠",2:"📦",3:"⚖️",4:"🔀",5:"🔁",6:"📋"};
+
+function updateProgress() {
+  document.getElementById('progress-bar').style.width = (answered / totalQ * 100) + '%';
+  document.getElementById('progress-label').textContent = answered + ' / ' + totalQ + ' respondidas';
+  document.getElementById('score-live').textContent = '⭐ ' + totalPoints + ' pts';
+}
+
+function handleAnswer(card, chosen, correct, pts, key) {
+  if (card.classList.contains('answered')) return;
+  card.classList.add('answered');
+  answered++;
+  const section = parseInt(card.dataset.section);
+  const fb = card.querySelector('.feedback');
+  const verdict = fb.querySelector('.verdict');
+  const msg = fb.querySelector('p');
+  const isCorrect = chosen === correct;
+  if (isCorrect) {
+    totalPoints += pts;
+    sectionPoints[section] += pts;
+    verdict.textContent = pts > 1 ? '✅ Correto! +' + pts + ' pontos' : '✅ Correto!';
+    fb.classList.add('correct', 'show');
+    msg.innerHTML = FEEDBACK[key]?.ok || '';
+  } else {
+    verdict.textContent = '❌ Resposta incorreta';
+    fb.classList.add('wrong', 'show');
+    msg.innerHTML = FEEDBACK[key]?.err || '';
+  }
+  updateProgress();
+  checkFinished();
+}
+
+// MC cards
+document.querySelectorAll('.q-card').forEach(card => {
+  const correct = card.dataset.correct;
+  if (correct === 'true' || correct === 'false') return; // handled below
+  const opts = card.querySelectorAll('.option');
+  const pts = parseInt(card.dataset.pts);
+  opts.forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (card.classList.contains('answered')) return;
+      opts.forEach(o => o.classList.add('disabled'));
+      const chosen = opt.dataset.val;
+      if (chosen === correct) {
+        opt.classList.add('correct');
+      } else {
+        opt.classList.add('wrong');
+        card.querySelector('[data-val="' + correct + '"]').classList.add('correct');
+      }
+      handleAnswer(card, chosen, correct, pts, card.id);
+    });
+  });
+});
+
+// TF cards
+document.querySelectorAll('.q-card').forEach(card => {
+  const correct = card.dataset.correct;
+  if (correct !== 'true' && correct !== 'false') return;
+  const btns = card.querySelectorAll('.tf-btn');
+  const pts = parseInt(card.dataset.pts);
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (card.classList.contains('answered')) return;
+      btns.forEach(b => b.classList.add('disabled'));
+      const chosen = btn.dataset.val;
+      if (chosen === correct) {
+        btn.classList.add('correct');
+      } else {
+        btn.classList.add('wrong');
+        btns.forEach(b => { if (b.dataset.val === correct) b.classList.add('correct'); });
+      }
+      handleAnswer(card, chosen, correct, pts, card.id);
+    });
+  });
+});
+
+function checkFinished() {
+  if (answered < totalQ) return;
+  const panel = document.getElementById('result-panel');
+  panel.style.display = 'block';
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  const pct = Math.round(totalPoints / maxPoints * 100);
+  const scoreEl = document.getElementById('result-score');
+  scoreEl.textContent = totalPoints + ' / ' + maxPoints + ' pts (' + pct + '%)';
+  scoreEl.style.color = pct >= 70 ? 'var(--success)' : pct >= 50 ? 'var(--warning)' : 'var(--danger)';
+  let msg = '';
+  if (pct >= 85) msg = '🏆 Incrível! Você dominou os fundamentos de JavaScript!';
+  else if (pct >= 70) msg = '👏 Muito bem! Você está no caminho certo. Revise os erros!';
+  else if (pct >= 50) msg = '📚 Bom esforço! Foque nas seções com mais erros e refaça o quiz.';
+  else msg = '💪 Continue praticando! Revise o material e tente novamente — cada tentativa te faz melhor!';
+  document.getElementById('result-msg').textContent = msg;
+  const container = document.getElementById('section-scores');
+  container.innerHTML = '';
+  [1,2,3,4,5,6].forEach(s => {
+    const raw = sectionPoints[s];
+    const max = sectionMax[s];
+    const p = Math.round(raw / max * 100);
+    const cls = p >= 70 ? 'good' : p >= 50 ? 'mid' : 'bad';
+    container.innerHTML += '<div class="sec-score"><div class="sec-icon">' + sectionIcons[s] + '</div><div class="sec-name">' + sectionNames[s] + '</div><div class="sec-val ' + cls + '">' + raw + '/' + max + ' pts</div></div>';
+  });
+}
+
+function restartQuiz() { location.reload(); }
+updateProgress();
+</script>
+</body>
+</html>

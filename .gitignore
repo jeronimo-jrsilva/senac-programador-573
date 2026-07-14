@@ -1,0 +1,8 @@
+*.md
+!README.md
+.ipynb_checkpoints/
+gabarito_*.js
+Detalhamento_Curricular.md
+Kit_Didatico_*.md
+ESTRATEGIA_PEDAGOGICA_*.md
+guia_pendrive_token.md

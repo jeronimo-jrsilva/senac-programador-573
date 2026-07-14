@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<!-- ============================================
+     COMPANION DE AULA — HTML5 (com CSS moderno)
+     Versão estilizada: layout moderno, fora do contexto SENAC.
+     Use esta página como "after" — o poder do CSS.
+     ============================================ -->
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companion — HTML5 (Com CSS)</title>
+    <style>
+        /* ============================================
+           RESET — tira margens/paddings padrão do navegador
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ============================================
+           BODY — fundo clean, fonte moderna (sistema)
+           Estilo "fora do contexto SENAC" — mais próximo de
+           apps modernos (VS Code, GitHub, Notion, etc.)
+           ============================================ */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           TÍTULO PRINCIPAL — gradiente vibrante azul→roxo
+           ============================================ */
+        h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        /* ============================================
+           HEADINGS — cores vibrantes progressivas
+           ============================================ */
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #6366f1;
+            margin-top: 48px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #6366f1, #a855f7);
+            border-image-slice: 1;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #475569;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        h4, h5, h6 {
+            color: #64748b;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+
+        h4 { font-size: 16px; font-weight: 600; }
+        h5 { font-size: 15px; font-weight: 600; color: #94a3b8; }
+        h6 { font-size: 14px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ============================================
+           PARÁGRAFOS E TEXTO
+           ============================================ */
+        p {
+            margin-bottom: 14px;
+            color: #334155;
+        }
+
+        /* Destaques inline com cor */
+        strong {
+            color: #6366f1;
+            font-weight: 700;
+        }
+
+        em {
+            color: #a855f7;
+            font-style: italic;
+        }
+
+        mark {
+            background: linear-gradient(120deg, #fde68a 0%, #fbbf24 100%);
+            color: #1e293b;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        u {
+            text-decoration-color: #6366f1;
+            text-underline-offset: 3px;
+        }
+
+        small {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        del {
+            color: #f87171;
+            text-decoration: line-through;
+        }
+
+        sup, sub {
+            font-size: 12px;
+            color: #a855f7;
+        }
+
+        /* ============================================
+           CÓDIGO INLINE — fundo sutil, fonte monoespaçada
+           ============================================ */
+        code {
+            background-color: #eef2ff;
+            color: #4f46e5;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 14px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid #c7d2fe;
+        }
+
+        /* ============================================
+           LINHA HORIZONTAL — gradiente sutil
+           ============================================ */
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+            margin: 48px 0;
+        }
+
+        /* ============================================
+           LABELS — estilo "tag/chip" moderna
+           ============================================ */
+        label {
+            display: inline-block;
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            color: #4338ca;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+            border: 1px solid #c7d2fe;
+            transition: all 0.2s ease;
+        }
+
+        label:hover {
+            background: linear-gradient(135deg, #c7d2fe, #a5b4fc);
+            transform: translateY(-1px);
+        }
+
+        /* ============================================
+           LISTAS
+           ============================================ */
+        ul, ol {
+            margin: 12px 0 16px 28px;
+            color: #334155;
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* Lista aninhada — diferenciada */
+        ul ul, ol ol {
+            margin-top: 6px;
+            margin-bottom: 6px;
+            color: #64748b;
+        }
+
+        dl {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+
+        dt {
+            font-weight: 700;
+            color: #6366f1;
+            margin-top: 8px;
+        }
+
+        dt:first-child {
+            margin-top: 0;
+        }
+
+        dd {
+            color: #64748b;
+            margin-left: 16px;
+            margin-bottom: 8px;
+        }
+
+        /* ============================================
+           TABELA — limpa, com linhas alternadas
+           ============================================ */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        th {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        tr:hover td {
+            background-color: #eef2ff;
+            transition: background 0.2s ease;
+        }
+
+        /* ============================================
+           CITAÇÕES
+           ============================================ */
+        blockquote {
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            border-left: 4px solid #6366f1;
+            padding: 20px 24px;
+            margin: 16px 0;
+            border-radius: 0 12px 12px 0;
+            color: #475569;
+            font-style: italic;
+            font-size: 17px;
+            line-height: 1.8;
+            box-shadow: 0 1px 3px rgba(99, 102, 241, 0.1);
+        }
+
+        q {
+            background: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 6px;
+            color: #4338ca;
+            font-style: italic;
+        }
+
+        /* ============================================
+           CONTAINER (DIV) — cartão com sombra
+           ============================================ */
+        div:not([class]) {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.3s ease;
+        }
+
+        div:not([class]):hover {
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.1);
+        }
+
+        div:not([class]) h3 {
+            margin-top: 0;
+            color: #6366f1;
+        }
+
+        div:not([class]) p {
+            margin-bottom: 6px;
+        }
+
+        span {
+            display: inline-block;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        /* ============================================
+           CÓDIGO PRÉ-FORMATADO — bloco com fundo escuro
+           ============================================ */
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 16px 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        pre code {
+            background: transparent;
+            border: none;
+            padding: 0;
+            color: #38bdf8;
+            font-size: 14px;
+        }
+
+        /* ============================================
+           ENTIDADES — destaque sutil
+           ============================================ */
+        h2:last-of-type ~ p {
+            font-size: 15px;
+        }
+
+        /* ============================================
+           RODAPÉ
+           ============================================ */
+        p:last-child {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        p:last-child strong {
+            color: #a855f7;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== CABEÇALHO DA PÁGINA ======== -->
+    <h1>Companion de Aula: HTML5</h1>
+    <!-- A tag <p> é um parágrafo de texto comum -->
+    <p>Esta página contém todos os elementos HTML apresentados em aula, agora com <strong>CSS moderno aplicado</strong>. Compare com a versão sem CSS para ver a diferença que o estilo faz.</p>
+
+    <!-- <hr> cria uma linha horizontal para separar seções -->
+    <hr>
+
+    <!-- ======== SEÇÃO 1: HEADINGS ======== -->
+    <!-- As tags de heading (<h1> a <h6>) definem títulos. Quanto maior o número, menor a importância. -->
+    <h2>1. Headings (Títulos)</h2>
+    <h1>Título nível 1 (h1) — o mais importante</h1>
+    <h2>Título nível 2 (h2)</h2>
+    <h3>Título nível 3 (h3)</h3>
+    <!-- Dica: <h4>, <h5> e <h6> existem para subníveis, mas são menos usados. -->
+    <h4>Título nível 4 (h4)</h4>
+    <h5>Título nível 5 (h5)</h5>
+    <h6>Título nível 6 (h6) — o menor</h6>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 2: PARÁGRAFOS E FORMATAÇÃO DE TEXTO ======== -->
+    <h2>2. Parágrafos e Formatação de Texto</h2>
+
+    <p>Este é um parágrafo comum. O navegador já aplica um espaçamento entre parágrafos automaticamente.</p>
+
+    <p>Tags de formatação inline (dentro do texto):</p>
+    <p><strong>Negrito</strong> — tag <code>&lt;strong&gt;</code>. Também pode ser <b>&lt;b&gt;</b>, mas prefira <code>strong</code>.</p>
+    <p><em>Itálico / ênfase</em> — tag <code>&lt;em&gt;</code>. Alternativa: <i>&lt;i&gt;</i>.</p>
+    <p><mark>Texto destacado</mark> — tag <code>&lt;mark&gt;</code> (como um marca-texto amarelo).</p>
+    <p><u>Sublinhado</u> — tag <code>&lt;u&gt;</code>.</p>
+    <p><small>Texto pequeno</small> — tag <code>&lt;small&gt;</code> (notas legais, avisos).</p>
+    <p><del>Riscado</del> — tag <code>&lt;del&gt;</code> (texto removido/excluído).</p>
+    <p>Texto com <sup>sobrescrito</sup> (sup) e <sub>subscrito</sub> (sub) — útil para fórmulas: H<sub>2</sub>O ou x<sup>2</sup>.</p>
+    <p><code>Código inline</code> — tag <code>&lt;code&gt;</code> (fonte monoespaçada).</p>
+
+    <!-- <br> é uma quebra de linha (tag auto-fechável, sem </br>) -->
+    <p>Este texto<br>tem quebras<br>de linha manuais.</p>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 3: LABELS (RÓTULOS) ======== -->
+    <!-- <label> é um rótulo para campos de formulário. Por enquanto, só visual. -->
+    <h2>3. Labels (Rótulos)</h2>
+    <label>Nome completo:</label>
+    <br>
+    <label>E-mail para contato:</label>
+    <br>
+    <label>Data de nascimento:</label>
+    <!-- Dica: o atributo for="id" liga o label a um input. Veremos em breve. -->
+    <br>
+    <label for="campo-email">E-mail (com for):</label>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 4: LISTAS ======== -->
+    <h2>4. Listas</h2>
+
+    <!-- <ul> = lista não ordenada (bullet points) -->
+    <h3>Lista não ordenada (ul)</h3>
+    <ul>
+        <li>Teclado</li>
+        <li>Mouse</li>
+        <li>Monitor</li>
+        <!-- Listas aninhadas: uma lista dentro de outra -->
+        <li>Acessórios
+            <ul>
+                <li>Mousepad</li>
+                <li>Suporte para notebook</li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- <ol> = lista ordenada (números) -->
+    <h3>Lista ordenada (ol)</h3>
+    <ol>
+        <li>Ligar o computador</li>
+        <li>Abrir o navegador</li>
+        <li>Acessar o site</li>
+    </ol>
+
+    <!-- <dl> = lista de definição (termo + descrição) — não mostrado nos slides -->
+    <!-- Dica extra: útil para glossários e pares chave-valor -->
+    <h3>Lista de definição (dl)</h3>
+    <dl>
+        <dt>HTML</dt>
+        <dd>Linguagem de marcação para estruturar páginas web.</dd>
+        <dt>CSS</dt>
+        <dd>Linguagem de estilo para definir a aparência.</dd>
+    </dl>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 5: TABELAS ======== -->
+    <h2>5. Tabela</h2>
+
+    <table>
+        <!-- <tr> = linha, <th> = cabeçalho (negrito automático), <td> = dado -->
+        <tr>
+            <th>Código</th>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+        </tr>
+        <tr>
+            <td>001</td>
+            <td>Teclado Mecânico</td>
+            <td>R$ 189,90</td>
+            <td>15</td>
+        </tr>
+        <tr>
+            <td>002</td>
+            <td>Mouse Sem Fio</td>
+            <td>R$ 79,90</td>
+            <td>8</td>
+        </tr>
+        <tr>
+            <td>003</td>
+            <td>Monitor 24"</td>
+            <td>R$ 899,00</td>
+            <td>0</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 6: CITAÇÃO ======== -->
+    <h2>6. Citação</h2>
+
+    <!-- <blockquote> é para citações longas em bloco separado -->
+    <blockquote>
+        "HTML é a espinha dorsal de qualquer página web. Sem ele, o navegador não sabe o que mostrar."
+    </blockquote>
+
+    <!-- <q> é para citações curtas inline (insere aspas automaticamente) -->
+    <p>O professor disse: <q>HTML não é linguagem de programação, é marcação.</q></p>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 7: ESTRUTURA COM DIVS ======== -->
+    <!-- <div> é um container genérico (bloco). Usamos para agrupar e organizar. -->
+    <h2>7. Estrutura com Divs</h2>
+
+    <div>
+        <h3>Cartão de Produto</h3>
+        <p><strong>Produto:</strong> Cadeira Ergonômica</p>
+        <p><strong>Preço:</strong> R$ 1.299,00</p>
+        <p><strong>Descrição:</strong> Cadeira com suporte lombar ajustável e braços 3D.</p>
+    </div>
+
+    <!-- <span> é container inline (diferente da div que é em bloco) -->
+    <p>Status do pedido: <span>Em andamento</span></p>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 8: CÓDIGO / PRÉ-FORMATADO ======== -->
+    <!-- <pre> preserva espaços e quebras de linha. Ideal para blocos de código. -->
+    <h2>8. Código pré-formatado (pre)</h2>
+
+    <pre><code>function saudacao(nome) {
+    console.log("Olá, " + nome + "!");
+}</code></pre>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 9: COMENTÁRIOS EM HTML ======== -->
+    <!-- Esta linha é um comentário HTML. Não aparece na tela! -->
+    <h2>9. Comentários em HTML</h2>
+
+    <p>Comentários são anotações no código que o navegador ignora — não aparecem na página.</p>
+
+    <!-- Isso é um comentário. Clique com botão direito > "Exibir código fonte" para ver. -->
+    <p>Veja o código fonte desta página (Ctrl+U) para encontrar os comentários.</p>
+
+    <p>Sintaxe HTML: <code>&lt;!-- texto do comentário --&gt;</code></p>
+
+    <p>Comentários servem para:</p>
+    <ul>
+        <li>Documentar seções do código</li>
+        <li>Desabilitar temporariamente partes do HTML</li>
+        <li>Deixar lembretes para você e sua equipe</li>
+    </ul>
+
+    <!--
+        Comentários
+        podem ocupar
+        várias linhas!
+    -->
+
+    <hr>
+
+    <!-- ======== SEÇÃO 9B: COMENTÁRIOS EM CSS ======== -->
+    <!-- O CSS também tem comentários — começam com /* e terminam com */ -->
+    <h2>9b. Comentários em CSS</h2>
+
+    <p>No CSS, os comentários usam <code>/* texto */</code>. Eles também são invisíveis na tela.</p>
+
+    <p>Exemplo (veja no código fonte do <code>&lt;style&gt;</code>):</p>
+
+    <pre><code>/* ============================================
+   SECÃO: CABEÇALHO
+   ============================================ */
+h1 {
+    color: blue;  /* cor do título principal */
+}</code></pre>
+
+    <p>Assim como no HTML, servem para organizar e documentar o código CSS.</p>
+
+    <hr>
+
+    <!-- ======== SEÇÃO 10: ENTIDADES HTML ======== -->
+    <!-- Alguns caracteres precisam ser escritos com entidades (&...;) -->
+    <h2>9. Entidades HTML (caracteres especiais)</h2>
+
+    <p>Espaço indivisível: &nbsp; (não quebra no fim da linha)</p>
+    <p>Menor que: &lt;  |  Maior que: &gt;  |  E comercial: &amp;</p>
+    <p>Aspas: &quot;  |  Apostrofe: &apos;</p>
+    <p>Símbolos: &copy; (copyright)  |  &reg; (registrado)  |  &trade; (trademark)</p>
+
+    <hr>
+
+    <!-- ======== RODAPÉ ======== -->
+    <p><em>Este é o fim da página de referência HTML. Volte para a versão <strong>sem CSS</strong> para ver o contraste entre HTML puro e HTML estilizado.</em></p>
+
+    <!-- Comentários HTML não aparecem na tela — só no código fonte. -->
+    <!-- Use <comentários> para documentar seu código! -->
+
+</body>
+</html>
